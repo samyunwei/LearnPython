@@ -12,13 +12,30 @@ class MoneyFmt(object):
         else:
             raise TypeError('Init with Float')
 
-    def dollarize(self):
+    def dollarize(self,showMinus=True):
         if self.moneynumber >= 0:
             return '$' + self.threenumbercut(str(self.moneynumber))
         else:
-            return '-$' + self.threenumbercut(str(abs(self.moneynumber)))
+            if showMinus:
+                return '-$' + self.threenumbercut(str(abs(self.moneynumber)))
+            else:
+                return '$<' + self.threenumbercut(str(abs(self.moneynumber))) + '>'
 
+    __repr__ = __str__ = dollarize 
+    
+    def update(self,theMoney):
+        if isinstance(theMoney,float):
+            self.moneynumber = theMoney
+        else:
+            raise TypeError('Update with Float')
 
+    def __nonzero(self):
+        if self.moneynumber < 1:
+            return False
+        else:
+            return True
+
+    
     def threenumbercut(self,thenumstr,theprecise = 2):
         if isinstance(thenumstr,str):
             thenumstr = thenumstr.split('.')
@@ -47,4 +64,7 @@ class MoneyFmt(object):
 if __name__ == '__main__':
         testmoney = MoneyFmt(-122222223.72331)
         print testmoney.dollarize()
-        
+        print testmoney
+        print testmoney.dollarize(False)
+        testmoney.update(111.1111)
+        print testmoney
