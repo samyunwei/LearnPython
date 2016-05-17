@@ -29,7 +29,7 @@ class MoneyFmt(object):
         else:
             raise TypeError('Update with Float')
 
-    def __nonzero(self):
+    def __nonzero__(self):
         if self.moneynumber < 1:
             return False
         else:
