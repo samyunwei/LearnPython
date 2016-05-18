@@ -1,0 +1,72 @@
+# -*- coding: UTF-8 -*- 
+# File Name: mydb.py
+# Author: Sam
+# mail: samyunwei@163.com
+# Created Time: 2016年05月18日 星期三 20时34分29秒
+#########################################################################
+#!/usr/bin/env python
+import os
+import pickle
+import time
+class MyUserDB(object):
+    def __init__(self,theUserName,thePassWord):
+        self.userdbpath = './MyUserDB/'+ theUserName
+        self.username = ''
+        self.password = ''
+        self.createtime = None
+        self.lastlogtime = None
+        self.initflag = False
+        self.data = None
+        if os.path.exists(self.userdbpath):
+            try:
+                with open(self.userdbpath,'r') as f:
+                    tempuser = pickle.load(f)
+                    if tempuser.password != thePassWord:
+                        self.initflag = False
+                        raise ValueError('password wrong!')
+                    else:
+                        self.lastlogtime = time.time()
+                        self.userdbpath = tempuser.userdbpath
+                        self.username = tempuser.username
+                        self.password = tempuser.password
+                        self.createtime = tempuser.createtime
+                        self.data = tempuser.data
+                        self.initflag = True
+            except IOError,e:
+                print e
+        else:
+            self.username = theUserName
+            self.password = thePassWord
+            self.createtime = time.time()
+            self.lastlogtime = self.createtime
+            self.initflag = True
+            print 'Create new User'
+    
+    def GetData(self):
+        return self.data 
+
+    def SetData(self,thedata):
+        self.data = thedata 
+
+    def __del__(self):
+        if self.initflag:
+            try:
+                with open(self.userdbpath,'w') as f:
+                    try:
+                        pickle.dump(self,f)
+                        pass
+                    except pickle.PicklingError,e:
+                        print e
+            except IOError, e:
+                print e
+        else:
+            pass
+
+if __name__ == '__main__':
+    test = MyUserDB('admin','admin')
+    print test.createtime
+    print test.username
+    print test.lastlogtime
+    print test.data
+    test.SetData('Hello World')
+    del test
