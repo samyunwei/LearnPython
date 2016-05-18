@@ -8,6 +8,7 @@
 import os
 import pickle
 import time
+import copy
 class MyUserDB(object):
     def __init__(self,theUserName,thePassWord):
         self.userdbpath = './MyUserDB/'+ theUserName
@@ -25,12 +26,9 @@ class MyUserDB(object):
                         self.initflag = False
                         raise ValueError('password wrong!')
                     else:
-                        self.lastlogtime = time.time()
-                        self.userdbpath = tempuser.userdbpath
-                        self.username = tempuser.username
-                        self.password = tempuser.password
-                        self.createtime = tempuser.createtime
-                        self.data = tempuser.data
+                        tempuservars = vars(tempuser)
+                        for eachattr in tempuservars.keys():
+                            setattr(self,eachattr,tempuservars[eachattr])
                         self.initflag = True
             except IOError,e:
                 print e
@@ -68,5 +66,5 @@ if __name__ == '__main__':
     print test.username
     print test.lastlogtime
     print test.data
-    test.SetData('Hello World')
+    test.SetData('Hello World33')
     del test
