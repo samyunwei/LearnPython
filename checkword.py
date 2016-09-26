@@ -7,12 +7,12 @@
 #!/usr/bin/env python
 import os
 
-def GetFileByType(theDirPath,thefileType):
-    allfiles = os.listdir(theDirPath)
+def GetFileByType(therootPath,thefileType):
     res = []
-    for eachfile in allfiles:
-        if thefileType in eachfile:
-            res.append(eachfile)
+    for root,dirs,files in os.walk(therootPath):
+        for eachfile in files:
+            if thefileType in eachfile:
+                res.append(os.path.join(root,eachfile))
     return res
     
     
@@ -38,7 +38,6 @@ if __name__ == '__main__':
     files = GetFileByType('./','.py')
     words = ['testword']
     res = []
-
     for eachfile in files:
         fres = CheckFile(eachfile,words)
         if fres and len(fres):
@@ -46,4 +45,3 @@ if __name__ == '__main__':
 
     for eachline in res:
         print eachline
-    
